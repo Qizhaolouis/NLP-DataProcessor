@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:5000';
+axios.defaults.withCredentials = true;
+
+const API_URL = 'https://nlp-etl.herokuapp.com';
 
 export const uploadData = async (file) => {
   const formData = new FormData();

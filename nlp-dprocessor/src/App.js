@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Container,
   Row,
@@ -96,8 +96,8 @@ function App() {
             <Row className="mb-3">
               <Col>
                 <div className="mt-3">
-                  <Button variant="info" onClick={reloadData}>
-                    Reload Data
+                  <Button variant="primary" onClick={reloadData}>
+                    Upload Data
                   </Button>
                 </div>
               </Col>
