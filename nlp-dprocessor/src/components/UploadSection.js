@@ -5,7 +5,7 @@ const UploadSection = ({ handleUpload }) => {
   return (
     <Row className="justify-content-center align-items-center min-vh-100">
       <Col md={6}>
-        <h1>GPT Data Processor</h1>
+        <h1>ConvoConver Data Processor</h1>
         <Form onSubmit={handleUpload}>
           <div className="mb-3">
             <Form.Group controlId="formFile">

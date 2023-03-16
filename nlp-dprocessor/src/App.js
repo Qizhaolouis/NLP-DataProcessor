@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Container,
   Row,
@@ -11,6 +11,7 @@ import './styles/App.css';
 import UploadSection from './components/UploadSection';
 import ETLSection from './components/ETLSection';
 import PlotSection from './components/PlotSection';
+import LandingSection from './components/LandingSection';
 import * as api from './api/api';
 
 function App() {
@@ -18,6 +19,18 @@ function App() {
   const [uploaded, setUploaded] = useState(false);
   const [plotUrl, setPlotUrl] = useState(null);
   const [loading, setLoading] = useState(false);
+  const uploadRef = useRef(null);
+  const etlRef = useRef(null);
+
+  const scrollToUpload = () => {
+    uploadRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    if (uploaded) {
+      etlRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [uploaded]);
 
   const handleUpload = async (event) => {
     event.preventDefault();
@@ -89,34 +102,27 @@ function App() {
         />
       )}
       <Container fluid>
-        {!uploaded ? (
-          <UploadSection handleUpload={handleUpload} />
-        ) : (
-          <>
-            <Row className="mb-3">
-              <Col>
-                <div className="mt-3">
-                  <Button variant="primary" onClick={reloadData}>
-                    Upload Data
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} md={6}>
-            <ETLSection
-              data={data}
-              handleProcessData={handleProcessData}
-              handleRevert={handleRevert}
-            /></Col>
-            <Col xs={12} md={6}>
-            <PlotSection 
-            plotUrl={plotUrl} 
-            handlePlotData={handlePlotData} />
-            </Col>
-          </Row>
-          </>
-        )}
+        <LandingSection handleTryNow={scrollToUpload} />
+        <div ref={uploadRef}></div>
+        <UploadSection handleUpload={handleUpload} />
+        <Row>
+          <Col xs={12} md={6}>
+            {uploaded && (
+              <div ref={etlRef}>
+                <ETLSection
+                  data={data}
+                  handleProcessData={handleProcessData}
+                  handleRevert={handleRevert}
+                />
+              </div>
+            )}
+          </Col>
+          <Col xs={12} md={6}>
+            {uploaded && (
+              <PlotSection plotUrl={plotUrl} handlePlotData={handlePlotData} />
+            )}
+          </Col>
+        </Row>
       </Container>
       <footer className="footer">Developed by Qi Zhao</footer>
     </div>
