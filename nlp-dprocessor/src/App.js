@@ -6,6 +6,7 @@ import {
   ProgressBar,
   Alert
 } from 'react-bootstrap';
+import { Resizable } from 're-resizable';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
 import UploadSection from './components/UploadSection';
@@ -20,24 +21,8 @@ function App() {
   const [plotUrl, setPlotUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploadError, setUploadError] = useState(false);
-  const [etlSectionWidth, setEtlSectionWidth] = useState('50%');
-  const [plotSectionWidth, setPlotSectionWidth] = useState('50%');
 
-  const handleTextAreaFocus = (section) => {
-    if (section === 'ETL') {
-      setEtlSectionWidth('80%');
-      setPlotSectionWidth('20%');
-    } else {
-      setEtlSectionWidth('40%');
-      setPlotSectionWidth('60%');
-    }
-  };
-  
-  const handleTextAreaBlur = () => {
-    setEtlSectionWidth('50%');
-    setPlotSectionWidth('50%');
-  };
-
+  {/* Handle Scrolling */}
   const uploadRef = useRef(null);
   const etlRef = useRef(null);
 
@@ -115,56 +100,38 @@ function App() {
 
   return (
     <div className="App">
-      {loading && (
-      <ProgressBar
-        now={100}
-        animated
-        label="Loading..."
-        style={{ position: 'fixed' }}
-      />
-    )}
-    {uploadError && (
-      <Alert
-        variant="danger"
-        onClose={() => setUploadError(false)}
-        dismissible
-        style={{ position: 'fixed', zIndex: 1050, width: '100%', textAlign: 'center' }}
-      >
-        Upload Failed
-      </Alert>
-    )}
+      {/* ProgressBar and Alert components */}
       <Container fluid>
         <LandingSection handleTryNow={scrollToUpload} />
         <div ref={uploadRef}></div>
         <UploadSection handleUpload={handleUpload} />
-        <Row>
-        <Col xs={12} md={6} style={{ width: etlSectionWidth }} className="section">
-          {uploaded && (
-            <div ref={etlRef}>
-            <ETLSection
-            data={data}
-            handleProcessData={handleProcessData}
-            handleRevert={handleRevert}
-            handleTextAreaFocus={() => handleTextAreaFocus('ETL')}
-            handleTextAreaBlur={handleTextAreaBlur}
-            />
-            </div>
-            )}
+
+        {uploaded && (
+          <Row>
+            <Resizable
+              defaultSize={{ width: '50%', height: 'auto' }}
+              minWidth="20%"
+              maxWidth="80%"
+              enable={{ top: false, right: true, bottom: false, left: false, 
+                topRight: false, bottomRight: false, bottomLeft: false, topLeft: false }}
+            >
+              <div ref={etlRef}>
+                <ETLSection
+                  data={data}
+                  handleProcessData={handleProcessData}
+                  handleRevert={handleRevert}
+                />
+              </div>
+            </Resizable>
+            <Col className="section">
+              <PlotSection
+                plotUrl={plotUrl}
+                handlePlotData={handlePlotData}
+              />
             </Col>
-            <Col xs={12} md={6} style={{ width: plotSectionWidth }} className="section">
-            {uploaded && (
-            <div>
-            <PlotSection
-            plotUrl={plotUrl}
-            handlePlotData={handlePlotData}
-            handleTextAreaFocus={() => handleTextAreaFocus('Plot')}
-            handleTextAreaBlur={handleTextAreaBlur}
-            />
-            </div>
-            )}
-            </Col>
-            </Row>
-            </Container>
+          </Row>
+        )}
+      </Container>
       <footer className="footer">Developed by Qi Zhao</footer>
     </div>
   );

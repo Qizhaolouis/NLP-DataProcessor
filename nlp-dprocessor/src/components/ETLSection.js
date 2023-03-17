@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Button, Card, Form, InputGroup, FormControl, Table } from 'react-bootstrap';
 import * as api from '../api/api'; // Import the API functions
 
-const ETLSection = ({ data, handleProcessData, handleRevert, handleTextAreaFocus, handleTextAreaBlur }) => {
+const ETLSection = ({ data, handleProcessData, handleRevert}) => {
 
   const formatDate = () => {
     const today = new Date();
@@ -49,11 +49,10 @@ const ETLSection = ({ data, handleProcessData, handleRevert, handleTextAreaFocus
   return (
     <Row>
       <Col>
-        <Card style={{ backgroundColor: '#333333'}}
-        onFocus={handleTextAreaFocus}>
+        <Card style={{ backgroundColor: '#333333'}}>
           <Card.Header>
             <Row>
-              <Col xs={12} md={10}>
+              <Col xs={12} md={6}>
                 <h2>ETL</h2>
               </Col>
               <Col>
