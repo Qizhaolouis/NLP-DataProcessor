@@ -3,8 +3,8 @@ import {
   Container,
   Row,
   Col,
-  Button,
   ProgressBar,
+  Alert
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
@@ -19,21 +19,21 @@ function App() {
   const [uploaded, setUploaded] = useState(false);
   const [plotUrl, setPlotUrl] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [uploadError, setUploadError] = useState(false);
   const [etlSectionWidth, setEtlSectionWidth] = useState('50%');
   const [plotSectionWidth, setPlotSectionWidth] = useState('50%');
 
-  /* Handle the size of each section */
-  const handleMouseEnter = (section) => {
+  const handleTextAreaFocus = (section) => {
     if (section === 'ETL') {
       setEtlSectionWidth('80%');
       setPlotSectionWidth('20%');
     } else {
-      setEtlSectionWidth('20%');
-      setPlotSectionWidth('80%');
+      setEtlSectionWidth('40%');
+      setPlotSectionWidth('60%');
     }
   };
-
-  const handleMouseLeave = () => {
+  
+  const handleTextAreaBlur = () => {
     setEtlSectionWidth('50%');
     setPlotSectionWidth('50%');
   };
@@ -54,23 +54,26 @@ function App() {
   const handleUpload = async (event) => {
     event.preventDefault();
     const file = event.target.elements.file.files[0];
-
+  
     setLoading(true);
-
-    if (file) {
-      await api.uploadData(file);
-    } else {
-      await api.getSampleData();
+  
+    try {
+      if (file) {
+        await api.uploadData(file);
+      } else {
+        await api.getSampleData();
+      }
+  
+      fetchData();
+      setUploaded(true);
+      setUploadError(false);
+    } catch (error) {
+      setUploadError(true);
+    } finally {
+      setLoading(false);
     }
-
-    fetchData();
-    setUploaded(true);
-    setLoading(false);
   };
-
-  const reloadData = () => {
-    setUploaded(false);
-  };
+  
 
   const fetchData = async () => {
     setLoading(true);
@@ -113,13 +116,23 @@ function App() {
   return (
     <div className="App">
       {loading && (
-        <ProgressBar
-          now={100}
-          animated
-          label="Loading..."
-          style={{ position: 'fixed' }}
-        />
-      )}
+      <ProgressBar
+        now={100}
+        animated
+        label="Loading..."
+        style={{ position: 'fixed' }}
+      />
+    )}
+    {uploadError && (
+      <Alert
+        variant="danger"
+        onClose={() => setUploadError(false)}
+        dismissible
+        style={{ position: 'fixed', zIndex: 1050, width: '100%', textAlign: 'center' }}
+      >
+        Upload Failed
+      </Alert>
+    )}
       <Container fluid>
         <LandingSection handleTryNow={scrollToUpload} />
         <div ref={uploadRef}></div>
@@ -127,24 +140,31 @@ function App() {
         <Row>
         <Col xs={12} md={6} style={{ width: etlSectionWidth }} className="section">
           {uploaded && (
-            <div ref={etlRef} onMouseEnter={() => handleMouseEnter('ETL')} onMouseLeave={handleMouseLeave}>
-              <ETLSection
-                data={data}
-                handleProcessData={handleProcessData}
-                handleRevert={handleRevert}
-              />
+            <div ref={etlRef}>
+            <ETLSection
+            data={data}
+            handleProcessData={handleProcessData}
+            handleRevert={handleRevert}
+            handleTextAreaFocus={() => handleTextAreaFocus('ETL')}
+            handleTextAreaBlur={handleTextAreaBlur}
+            />
             </div>
-          )}
-        </Col>
-        <Col xs={12} md={6} style={{ width: plotSectionWidth }} className="section">
-          {uploaded && (
-            <div onMouseEnter={() => handleMouseEnter('Plot')} onMouseLeave={handleMouseLeave}>
-              <PlotSection plotUrl={plotUrl} handlePlotData={handlePlotData} />
+            )}
+            </Col>
+            <Col xs={12} md={6} style={{ width: plotSectionWidth }} className="section">
+            {uploaded && (
+            <div>
+            <PlotSection
+            plotUrl={plotUrl}
+            handlePlotData={handlePlotData}
+            handleTextAreaFocus={() => handleTextAreaFocus('Plot')}
+            handleTextAreaBlur={handleTextAreaBlur}
+            />
             </div>
-          )}
-        </Col>
-      </Row>
-      </Container>
+            )}
+            </Col>
+            </Row>
+            </Container>
       <footer className="footer">Developed by Qi Zhao</footer>
     </div>
   );

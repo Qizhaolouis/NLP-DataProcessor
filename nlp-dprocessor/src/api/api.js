@@ -2,7 +2,7 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
-const API_URL = 'https://api.convo-conver.com';
+const API_URL = 'https://api.convo-conver.com'; //"https://nlp-etl.herokuapp.com"
 
 export const uploadData = async (file) => {
   const formData = new FormData();
@@ -58,6 +58,24 @@ export const plotData = async (instruction) => {
     { instruction },
     { responseType: 'blob', withCredentials: true }
   );
+
+  return response.data;
+};
+
+export const getCSV = async () => {
+  const response = await axios.get(`${API_URL}/get_csv`, {
+    responseType: 'blob',
+    withCredentials: true,
+  });
+
+  return response.data;
+};
+
+export const getCode = async () => {
+  const response = await axios.get(`${API_URL}/get_code`, {
+    responseType: 'blob',
+    withCredentials: true,
+  });
 
   return response.data;
 };

@@ -9,7 +9,7 @@ const UploadSection = ({ handleUpload }) => {
         <Form onSubmit={handleUpload}>
           <div className="mb-3">
             <Form.Group controlId="formFile">
-              <Form.Label>Please upload a csv file. If no file uploaded, sample data will be used.</Form.Label>
+              <Form.Label>Please upload a csv file smaller than 1 MB. If no file uploaded, sample data will be used.</Form.Label>
               <Form.Control type="file" name="file" />
             </Form.Group>
           </div>
