@@ -104,3 +104,7 @@ h1, h2, h3, h4 {
 .progress-bar {
   height: 20px;
 }
+
+.section {
+  transition: width 0.3s ease-in-out;
+}

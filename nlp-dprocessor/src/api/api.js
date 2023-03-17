@@ -2,7 +2,7 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
-const API_URL = 'https://nlp-etl.herokuapp.com';
+const API_URL = 'https://api.convo-conver.com';
 
 export const uploadData = async (file) => {
   const formData = new FormData();

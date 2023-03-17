@@ -19,6 +19,25 @@ function App() {
   const [uploaded, setUploaded] = useState(false);
   const [plotUrl, setPlotUrl] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [etlSectionWidth, setEtlSectionWidth] = useState('50%');
+  const [plotSectionWidth, setPlotSectionWidth] = useState('50%');
+
+  /* Handle the size of each section */
+  const handleMouseEnter = (section) => {
+    if (section === 'ETL') {
+      setEtlSectionWidth('80%');
+      setPlotSectionWidth('20%');
+    } else {
+      setEtlSectionWidth('20%');
+      setPlotSectionWidth('80%');
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setEtlSectionWidth('50%');
+    setPlotSectionWidth('50%');
+  };
+
   const uploadRef = useRef(null);
   const etlRef = useRef(null);
 
@@ -106,23 +125,25 @@ function App() {
         <div ref={uploadRef}></div>
         <UploadSection handleUpload={handleUpload} />
         <Row>
-          <Col xs={12} md={6}>
-            {uploaded && (
-              <div ref={etlRef}>
-                <ETLSection
-                  data={data}
-                  handleProcessData={handleProcessData}
-                  handleRevert={handleRevert}
-                />
-              </div>
-            )}
-          </Col>
-          <Col xs={12} md={6}>
-            {uploaded && (
+        <Col xs={12} md={6} style={{ width: etlSectionWidth }} className="section">
+          {uploaded && (
+            <div ref={etlRef} onMouseEnter={() => handleMouseEnter('ETL')} onMouseLeave={handleMouseLeave}>
+              <ETLSection
+                data={data}
+                handleProcessData={handleProcessData}
+                handleRevert={handleRevert}
+              />
+            </div>
+          )}
+        </Col>
+        <Col xs={12} md={6} style={{ width: plotSectionWidth }} className="section">
+          {uploaded && (
+            <div onMouseEnter={() => handleMouseEnter('Plot')} onMouseLeave={handleMouseLeave}>
               <PlotSection plotUrl={plotUrl} handlePlotData={handlePlotData} />
-            )}
-          </Col>
-        </Row>
+            </div>
+          )}
+        </Col>
+      </Row>
       </Container>
       <footer className="footer">Developed by Qi Zhao</footer>
     </div>

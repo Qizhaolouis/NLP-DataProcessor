@@ -5,7 +5,7 @@ const ETLSection = ({ data, handleProcessData, handleRevert }) => {
   return (
     <Row>
       <Col>
-        <Card>
+        <Card style={{ backgroundColor: '#333333'}}>
           <Card.Header>
             <Row>
               <Col xs={12} md={10}>
