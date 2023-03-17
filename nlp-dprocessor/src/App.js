@@ -33,6 +33,7 @@ function App() {
   useEffect(() => {
     if (uploaded) {
       etlRef.current.scrollIntoView({ behavior: 'smooth' });
+      setUploaded(false)
     }
   }, [uploaded]);
 
