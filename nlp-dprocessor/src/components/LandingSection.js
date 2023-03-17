@@ -33,32 +33,48 @@ const LandingSection = ({ handleTryNow }) => {
       <Row className="mt-5 text-center">
         <Col md={6}>
           <ScrollAnimation animateIn="fadeIn">
-            <h4>Seamless Conversational Interface</h4>
-            <p>Interact with your data in real-time using our intuitive conversational interface. Just type in your questions or commands and let Convo-Conver do the work for you.</p>
+            <div className="feature">
+              <h4>Seamless Conversational Interface</h4>
+              <p className="feature-text">
+                Interact with your data in real-time using our intuitive conversational interface. Just type in your questions or commands and let Convo-Conver do the work for you.
+              </p>
+            </div>
           </ScrollAnimation>
         </Col>
         <Col md={6}>
-          <ScrollAnimation animateIn="fadeIn" delay={100}>
-            <h4>Effortless Data Transformations</h4>
-            <p>Simplify complex data manipulation tasks with Convo-Conver's powerful natural language processing capabilities. No more struggling with complicated formulas or coding languages.</p>
+          <ScrollAnimation animateIn="fadeIn">
+            <div className="feature">
+              <h4>Effortless Data Transformations</h4>
+              <p className="feature-text">
+                Simplify complex data manipulation tasks with Convo-Conver's powerful natural language processing capabilities. No more struggling with complicated formulas or coding languages.
+              </p>
+            </div>
           </ScrollAnimation>
         </Col>
       </Row>
       <Row className="mt-4 text-center">
         <Col md={6}>
-          <ScrollAnimation animateIn="fadeIn" delay={200}>
-            <h4>Stunning Visualizations</h4>
-            <p>Transform your data into visually appealing and easy-to-understand plots and charts. Convo-Conver's advanced visualization engine will bring your data to life.</p>
+          <ScrollAnimation animateIn="fadeIn">
+            <div className="feature">
+              <h4>Stunning Visualizations</h4>
+              <p className="feature-text">
+                Transform your data into visually appealing and easy-to-understand plots and charts. Convo-Conver's advanced visualization engine will bring your data to life.
+              </p>
+            </div>
           </ScrollAnimation>
         </Col>
         <Col md={6}>
-          <ScrollAnimation animateIn="fadeIn" delay={300}>
-            <h4>Downloadable Code</h4>
-            <p>Need to share your work or replicate your results? Convo-Conver provides you with downloadable code snippets, making it easy to integrate your findings into your projects or share your insights with your team.</p>
-            </ScrollAnimation>
+          <ScrollAnimation animateIn="fadeIn">
+            <div className="feature">
+              <h4>Downloadable Code</h4>
+              <p className="feature-text">
+                Need to share your work or replicate your results? Convo-Conver provides you with downloadable code snippets, making it easy to integrate your findings into your projects or share your insights with your team.
+              </p>
+            </div>
+          </ScrollAnimation>
         </Col>
-    </Row>
-</Container>
+      </Row>
+    </Container>
 );
 };
 

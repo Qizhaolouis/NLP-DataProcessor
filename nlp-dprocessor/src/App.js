@@ -21,8 +21,7 @@ function App() {
   const [plotUrl, setPlotUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploadError, setUploadError] = useState(false);
-
-  {/* Handle Scrolling */}
+  const [scroll, setScroll] = useState(false);
   const uploadRef = useRef(null);
   const etlRef = useRef(null);
 
@@ -30,12 +29,17 @@ function App() {
     uploadRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const CustomHandle = (props) => {
+    const { className, ...restProps } = props;
+    return <div className={`${className} resize-handle`} {...restProps} />;
+  };
+
   useEffect(() => {
-    if (uploaded) {
+    if (scroll) {
       etlRef.current.scrollIntoView({ behavior: 'smooth' });
-      setUploaded(false)
     }
-  }, [uploaded]);
+    setScroll(false)
+  }, [scroll]);
 
   const handleUpload = async (event) => {
     event.preventDefault();
@@ -52,6 +56,7 @@ function App() {
   
       fetchData();
       setUploaded(true);
+      setScroll(true)
       setUploadError(false);
     } catch (error) {
       setUploadError(true);
@@ -101,6 +106,24 @@ function App() {
 
   return (
     <div className="App">
+    {loading && (
+    <ProgressBar
+      now={100}
+      animated
+      label="Loading..."
+      style={{ position: 'fixed' }}
+    />
+  )}
+  {uploadError && (
+    <Alert
+      variant="danger"
+      onClose={() => setUploadError(false)}
+      dismissible
+      style={{ position: 'fixed', zIndex: 1050, width: '100%', textAlign: 'center' }}
+    >
+      Upload Failed
+    </Alert>
+  )} 
       {/* ProgressBar and Alert components */}
       <Container fluid>
         <LandingSection handleTryNow={scrollToUpload} />
@@ -113,8 +136,17 @@ function App() {
               defaultSize={{ width: '50%', height: 'auto' }}
               minWidth="20%"
               maxWidth="80%"
-              enable={{ top: false, right: true, bottom: false, left: false, 
-                topRight: false, bottomRight: false, bottomLeft: false, topLeft: false }}
+              enable={{
+                top: false,
+                right: true,
+                bottom: false,
+                left: false,
+                topRight: false,
+                bottomRight: false,
+                bottomLeft: false,
+                topLeft: false,
+              }}
+              handleComponent={{ right: CustomHandle }}
             >
               <div ref={etlRef}>
                 <ETLSection

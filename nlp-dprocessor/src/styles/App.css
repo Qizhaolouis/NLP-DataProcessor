@@ -108,3 +108,31 @@ h1, h2, h3, h4 {
 .section {
   transition: width 0.3s ease-in-out;
 }
+
+.feature-text {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.feature:hover .feature-text {
+  opacity: 1;
+}
+
+.resize-handle {
+  background-color: #ccc;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resize-handle::before {
+  content: "";
+  height: 50%;
+  width: 1px;
+  background-color: #999;
+}
