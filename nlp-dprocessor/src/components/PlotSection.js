@@ -1,11 +1,14 @@
 import React from 'react';
-import { Card, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Col, Card, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
 
-const PlotSection = ({ plotUrl, handlePlotData}) => {
+const PlotSection = ({ plotUrl, handlePlotData, handleTextAreaFocus }) => {
   return (
-    <Card style={{ backgroundColor: '#333333'}}>
+    <Card style={{ backgroundColor: '#333333'}}
+    onFocus={handleTextAreaFocus}>
       <Card.Header>
+        <Col  xs={12} md={3}>
         <h2>Plot</h2>
+        </Col>
       </Card.Header>
       <Card.Body>
         <Form onSubmit={handlePlotData}>

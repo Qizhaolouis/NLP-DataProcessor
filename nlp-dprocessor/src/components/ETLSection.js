@@ -1,8 +1,9 @@
 import React from 'react';
+import { useTable, useSortBy  } from 'react-table';
 import { Row, Col, Button, Card, Form, InputGroup, FormControl, Table } from 'react-bootstrap';
 import * as api from '../api/api'; // Import the API functions
 
-const ETLSection = ({ data, handleProcessData, handleRevert}) => {
+const ETLSection = ({ data, handleProcessData, handleRevert, handleTextAreaFocus }) => {
 
   const formatDate = () => {
     const today = new Date();
@@ -44,15 +45,41 @@ const ETLSection = ({ data, handleProcessData, handleRevert}) => {
       URL.revokeObjectURL(url);
     }, 100);
   };
+
+  const columns = React.useMemo(() => {
+    if (data && data.length > 0) {
+      return Object.keys(data[0]).map((key) => ({
+        Header: () => (
+          <>
+            <div>{key}</div>
+            <div style={{ fontSize: '12px', color: '#999999' }}>
+              {typeof data[0][key] === 'number' ? 'number' : 'string'}
+            </div>
+          </>
+        ),
+        accessor: key,
+      }));
+    }
+    return [];
+  }, [data]);
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({ columns, data }, useSortBy);
   
 
   return (
     <Row>
       <Col>
-        <Card style={{ backgroundColor: '#333333'}}>
+        <Card style={{ backgroundColor: '#333333'}}
+        onFocus={handleTextAreaFocus}>
           <Card.Header>
             <Row>
-              <Col xs={12} md={6}>
+              <Col xs={12} md={3}>
                 <h2>ETL</h2>
               </Col>
               <Col>
@@ -60,14 +87,14 @@ const ETLSection = ({ data, handleProcessData, handleRevert}) => {
                   <Button
                     variant="success"
                     onClick={handleDownloadCSV}
-                    className="mr-2"
+                    className="button-spacing"
                   >
                     Download CSV
                   </Button>
                   <Button
                     variant="info"
                     onClick={handleDownloadCode}
-                    className="mr-2"
+                    className="button-spacing"
                   >
                     Download Code
                   </Button>
@@ -97,32 +124,37 @@ const ETLSection = ({ data, handleProcessData, handleRevert}) => {
               </InputGroup>
             </Form>
             <div className="table-container">
-              <Table striped bordered hover size="sm">
-              <thead>
-                <tr>
-                  {data &&
-                    Object.keys(data[0]).map((key) => (
-                      <th key={key}>
-                        <div style={{ color: '#999999' }}>
-                          {typeof data[0][key] === 'number'
-                            ? 'number'
-                            : 'string'}
-                        </div>
-                        {key}
-                      </th>
-                    ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.map((row, index) => (
-                    <tr key={index}>
-                      {Object.values(row).map((value, i) => (
-                        <td key={i}>{value}</td>
+            <Table striped bordered hover size="sm" {...getTableProps()} style={{ minWidth: '100%' }}>
+                <thead>
+                  {headerGroups.map((headerGroup) => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map((column) => (
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                          {column.render('Header')}
+                          <span>
+                            {column.isSorted
+                              ? column.isSortedDesc
+                                ? '🔽'
+                                : '🔼'
+                              : ''}
+                          </span>
+                        </th>
                       ))}
                     </tr>
                   ))}
-              </tbody>
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                  {rows.map((row) => {
+                    prepareRow(row);
+                    return (
+                      <tr {...row.getRowProps()} className="table-row" tabIndex={0}>
+                        {row.cells.map((cell) => (
+                          <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
               </Table>
             </div>
           </Card.Body>
