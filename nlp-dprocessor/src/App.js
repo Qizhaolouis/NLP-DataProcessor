@@ -8,6 +8,8 @@ import {
 } from 'react-bootstrap';
 import { Resizable } from 're-resizable';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import * as d3 from 'd3';
+import './styles/Background.css';
 import './styles/App.css';
 import UploadSection from './components/UploadSection';
 import ETLSection from './components/ETLSection';
@@ -19,11 +21,48 @@ function App() {
   const [data, setData] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [plotUrl, setPlotUrl] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); 
   const [uploadError, setUploadError] = useState(false);
   const [scroll, setScroll] = useState(false);
   const uploadRef = useRef(null);
   const etlRef = useRef(null);
+
+  const createBackground = () => {
+    const container = d3.select('.App').append('div').attr('class', 'background');
+  
+    // Add dark green stripes
+    for (let i = 0; i < 10; i++) {
+      container
+        .append('div')
+        .attr('class', 'square')
+        .style('background-color', 'rgba(0, 0, 139, 0.5)')
+        .style('width', '100px')
+        .style('height', '100px')
+        .style('position', 'absolute')
+        .style('top', `${Math.random() * 100}vh`)
+        .style('left', `${Math.random() * 100}vw`);
+    }
+  };
+
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+  
+    d3.selectAll('.square')
+      .style('transform', (d, i) => `translateY(${scrollY * (i % 5) * 0.1}px)`);
+  
+    d3.selectAll('.stripe')
+      .style('transform', (d, i) => `translateY(${scrollY * (i % 5) * 0.05}px)`);
+  };
+
+  useEffect(() => {
+    createBackground();
+  
+    window.addEventListener('scroll', handleScroll);
+  
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const scrollToUpload = () => {
     uploadRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -156,7 +195,7 @@ function App() {
                 />
               </div>
             </Resizable>
-            <Col className="section">
+            <Col className="section resize-container">
               <PlotSection
                 plotUrl={plotUrl}
                 handlePlotData={handlePlotData}
