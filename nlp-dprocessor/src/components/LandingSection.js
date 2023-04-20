@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Button, Image } from 'react-bootstrap';
 import ScrollAnimation from 'react-animate-on-scroll';
 
-const LandingSection = ({ handleTryNow }) => {
+const LandingSection = ({ handleTryETL, handleTryWorkflow }) => {
   return (
     <Container className="my-5 landing-section">
       <Row className="align-items-center" style={{ position: 'relative' }}>
@@ -23,10 +23,18 @@ const LandingSection = ({ handleTryNow }) => {
           <h3 className="text-center mb-4">Transforming Data Through Engaging Conversations!</h3>
           <p className="text-center"  style={{"color":"white"}}>Discover the power of ConvoConver, a cutting-edge data transformation and visualization platform that can help harnesses
           the intuitiveness of natural language processing to revolutionize the way you analyze and present your data.</p>
-          <div className="text-center mt-4">
-            <Button variant="primary" size="lg" onClick={handleTryNow}>
-              Try Now!
-            </Button>
+          <div>
+            <div className="text-center mt-4">
+              <Button variant="primary" size="lg" onClick={handleTryETL}>
+                Try Data Converter Now!
+              </Button>
+            </div>
+
+            <div className="text-center mt-4">
+              <Button variant="primary" size="lg" onClick={handleTryWorkflow}>
+                Try Data Flow Generator Now!
+              </Button>
+            </div>
           </div>
         </Col>
       </Row>

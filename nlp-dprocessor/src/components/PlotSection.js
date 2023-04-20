@@ -1,10 +1,9 @@
 import React from 'react';
 import { Col, Card, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
 
-const PlotSection = ({ plotUrl, handlePlotData, handleTextAreaFocus }) => {
+const PlotSection = ({ plotUrl, handlePlotData }) => {
   return (
-    <Card style={{ backgroundColor: '#333333'}}
-    onFocus={handleTextAreaFocus}>
+    <Card style={{ backgroundColor: '#333333'}}>
       <Card.Header>
         <Col  xs={12} md={3}>
         <h2>Plot</h2>

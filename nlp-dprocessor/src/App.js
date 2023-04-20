@@ -8,6 +8,7 @@ import {
 } from 'react-bootstrap';
 import { Resizable } from 're-resizable';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import mermaid from 'mermaid';
 import * as d3 from 'd3';
 import './styles/Background.css';
 import './styles/App.css';
@@ -15,17 +16,20 @@ import UploadSection from './components/UploadSection';
 import ETLSection from './components/ETLSection';
 import PlotSection from './components/PlotSection';
 import LandingSection from './components/LandingSection';
+import WorkflowSection from './components/WorkflowSection';
 import * as api from './api/api';
 
 function App() {
   const [data, setData] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [plotUrl, setPlotUrl] = useState(null);
+  const [mermaidCode, setMermaidCode] = useState(null);
   const [loading, setLoading] = useState(false); 
   const [uploadError, setUploadError] = useState(false);
   const [scroll, setScroll] = useState(false);
   const uploadRef = useRef(null);
   const etlRef = useRef(null);
+  const workflowRef = useRef(null);
 
   const createBackground = () => {
     const container = d3.select('.App').append('div').attr('class', 'background');
@@ -54,6 +58,7 @@ function App() {
       .style('transform', (d, i) => `translateY(${scrollY * (i % 5) * 0.05}px)`);
   };
 
+
   useEffect(() => {
     createBackground();
   
@@ -66,6 +71,10 @@ function App() {
 
   const scrollToUpload = () => {
     uploadRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToWorkflow = () => {
+    workflowRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const CustomHandle = (props) => {
@@ -117,19 +126,19 @@ function App() {
     }
     };
     
-    const handleProcessData = async (event) => {
+  const handleProcessData = async (event) => {
     event.preventDefault();
     const input = event.target.elements.instruction.value;
     setLoading(true);
-try {
-  await api.processData(input);
-  fetchData();
-} catch (error) {
-  alert("Instruction failed!");
-} finally {
-  setLoading(false);
-}
-};
+    try {
+      await api.processData(input);
+      fetchData();
+    } catch (error) {
+      alert("Instruction failed!");
+    } finally {
+      setLoading(false);
+    }
+    };
 
 const handleRevert = async () => {
 setLoading(true);
@@ -158,6 +167,21 @@ try {
 }
 };
 
+const handleGenerateWorkflow = async (event) => {
+event.preventDefault();
+const input = event.target.elements.instruction.value;
+setLoading(true);
+try {
+  const code = await api.generateWorkflow(input);
+  setMermaidCode(code);
+} catch (error) {
+  alert("Instruction failed!");
+} finally {
+  setLoading(false);
+  
+}
+}
+
 return (
 <div className="App">
 {loading && (
@@ -180,7 +204,8 @@ Upload Failed
 )}
 {/* ProgressBar and Alert components */}
 <Container fluid>
-<LandingSection handleTryNow={scrollToUpload} />
+<LandingSection handleTryETL={scrollToUpload} 
+handleTryWorkflow={scrollToWorkflow} />
 <div ref={uploadRef}></div>
 <UploadSection handleUpload={handleUpload} />
 {uploaded && (
@@ -218,6 +243,13 @@ Upload Failed
       </Row>
     )}
   </Container>
+
+<Container fluid>
+  <div ref={workflowRef}></div>
+  <WorkflowSection 
+    mermaidCode={mermaidCode}
+    generateWorkflow={handleGenerateWorkflow}/>
+</Container>
   <footer className="footer">Developed by Qi Zhao</footer>
 </div>
 );

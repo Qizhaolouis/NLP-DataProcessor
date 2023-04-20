@@ -44,6 +44,16 @@ export const processData = async (instruction) => {
   return response;
 };
 
+export const generateWorkflow = async (instruction) => {
+  const response = await axios.post(
+    `${API_URL}/generate_mermaid`,
+    { instruction },
+    { withCredentials: true }
+  );
+
+  return response.data;
+};
+
 export const revertData = async () => {
   const response = await axios.post(`${API_URL}/revert`, {}, {
     withCredentials: true,
