@@ -1,0 +1,10 @@
+graph TD;
+    student(Student Table) -- has -- student_id;
+    student(Student Table) -- has -- name;
+    teacher(Teacher Table) -- has -- teacher_id;
+    teacher(Teacher Table) -- has -- name;
+    class(Class Table) -- includes -- student_id;
+    class(Class Table) -- includes -- teacher_id;
+    
+    student(Student Table) --> class(Class Table);
+    teacher(Teacher Table) --> class(Class Table);
